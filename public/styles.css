@@ -1,21 +1,52 @@
-.bg-light-blue {
-    background-color: #58c7eb;
-}
+
 .large-font {
-    font-size: 1.2rem;
+    font-size: 1.4rem;
+    
 }
 body {
-    background: url('/images/background.png') no-repeat center center fixed; 
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/images/background.png') no-repeat center center fixed; 
     background-size: cover;
 }
 .navbar {
+    background: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.2));
     padding: 1.5rem 1rem;
     padding: 1.5rem 1.5rem;  
 }
 .navbar-brand img {
     height: 60px;
 }
-.navbar-brand {
-    padding-right: 20px;
+.navbar-nav li  {
+    display: flex;
+    margin-left: 3rem;
+    justify-content: space-between;
+}
+.big-logo {
+    width: 300px;  
+    height: auto;
+}
+
+.big-text {
+    font-size: 5rem;  
+    color: white;
+}
+.footer {
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4));
+    padding: 1rem 1rem;
+
+}
+.filters{
+    background: linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4));
+    padding: 1rem 1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.form-select{
+    width: 15%;
+    margin-right: 1rem;
+}
+.form-control{
+    width: 15%;
+    margin-right: 1rem;
 }
