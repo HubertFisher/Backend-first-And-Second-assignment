@@ -17,5 +17,4 @@ router.post('/travelagency', (req, res) => {
     // Render the result page with calculated data
     res.render('travelAgencyResult', { result: calculatedResult });
 });
-
 module.exports = router;
