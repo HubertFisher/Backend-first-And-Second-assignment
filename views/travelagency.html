@@ -12,8 +12,8 @@
     <title>Travel Agency</title>
 </head>
 
-<body class="container-fluid vh-100 bg-light-blue p-0">
-    <nav class="navbar navbar-expand-lg navbar-light large-font">
+<body class="container-fluid p-0">
+    <nav class="navbar navbar-expand-lg navbar-light large-font fixed-top">
         <a class="navbar-brand mx-0" href="/">
             <img src="/images/logo.png" alt="Logo" height="40">
         </a>
@@ -43,7 +43,7 @@
     <div class="text-center">
         <h1 class="big-text py-3">Tours</h1>
     </div>
-    <div class="filters">
+    <div class="filters container">
         <select class="form-select" aria-label="Default select example" id="countryInput">
             <option value="">Select a country</option>
             <option value="Australia">Australia</option>
@@ -51,6 +51,7 @@
             <option value="Kazakhstan">Kazakhstan</option>
             <option value="France">France</option>
             <option value="Italy">Italy</option>
+            <option value="Japan">Italy</option>
             <option value="United States">United States</option>
         </select>
         <select class="form-select" aria-label="Default select example" id="cityInput">
@@ -58,7 +59,7 @@
         </select>
         <input class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" type="number" id="minPriceInput" placeholder="Min price">
         <input class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm" type="number" id="maxPriceInput" placeholder="Max price">
-        <button class="btn btn-light px-5 mx-5" id="showToursButton"> Show tours</button>
+        <button class="btn btn-light" id="showToursButton"> Show tours</button>
     </div>
     <div class="container">
         <div class="row" id="toursContainer">
@@ -66,7 +67,7 @@
         </div>
     </div>
     </div>
-    <footer class="footer fixed-bottom text-white text-center large-font">
+    <footer class="footer text-white text-center large-font">
         <p>© 2024 Ali Tulegenov | SE-2208</p>
     </footer>
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
@@ -74,25 +75,12 @@
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://kit.fontawesome.com/3b83a3096d.js" crossorigin="anonymous"></script>
     <script>
-        document.getElementById('showToursButton').addEventListener('click', function() {
-            const country = document.getElementById('countryInput').value;
-            const cityName = document.getElementById('cityInput').value;
-            const minPrice = document.getElementById('minPriceInput').value;
-            const maxPrice = document.getElementById('maxPriceInput').value;
-            fetchTours({
-                country,
-                cityName,
-                minPrice,
-                maxPrice
-            });
-        });
         document.getElementById('countryInput').addEventListener('change', async function() {
             const country = this.value;
             const cityInput = document.getElementById('cityInput');
             console.log(country);
             cityInput.innerHTML = '<option value="">Select a city</option>';
             const cities = await getCitiesForCountry(country);
-        
             if (Array.isArray(cities)) {
                 cities.forEach(city => {
                     const option = document.createElement('option');
@@ -110,9 +98,74 @@
                 console.error('Failed to fetch cities:', response.statusText);
                 return [];
             }
-            const cities = await response.json(); 
+            const cities = await response.json();
             return cities;
         }
+        document.getElementById('showToursButton').addEventListener('click', function() {
+            const country = document.getElementById('countryInput').value;
+            const cityName = document.getElementById('cityInput').value;
+            const minPrice = document.getElementById('minPriceInput').value;
+            const maxPrice = document.getElementById('maxPriceInput').value;
+            fetchTours({
+                country
+            }, {
+                cityName
+            }, {
+                minPrice
+            }, {
+                maxPrice
+            });
+        });
+
+        function fetchTours(filters) {
+            const url = `/api/tours?${new URLSearchParams(filters).toString()}`;
+            fetch(url).then(response => {
+                if (!response.ok) {
+                    console.error('Error:', response.statusText);
+                    throw new Error('Failed to fetch tours');
+                }
+                return response.json();
+            }).then(data => {
+                console.log('Data from server:', data); // Log the data from the server
+                displayTours(data);
+            }).catch(error => console.error('Error fetching tours:', error));
+        }
+
+        function displayTours(data) {
+            const toursContainer = document.getElementById('toursContainer');
+            toursContainer.innerHTML = '';
+            if (Array.isArray(data.tours)) {
+                data.tours.forEach(tour => {
+                    const card = createTourCard(tour);
+                    toursContainer.appendChild(card);
+                });
+            } else {
+                console.error('Tours is not an array:', data.tours);
+                // Handle the error or log it accordingly
+            }
+        }
+
+        function createTourCard(data) {
+            const card = document.createElement('div');
+            card.className = 'col-md-6 col-lg-6';
+            card.style.marginBottom = '25px';
+            card.innerHTML = `
+            <div class="card">
+            <img src="${data.img}" class="card-img-top" alt="${data.city}">
+            <div class="card-body">
+                <h5 class="card-title">${data.city}</h5>
+                <p class="card-text"><strong>Hotel:</strong> ${data.hotel}</p>
+                <p class="card-text"><strong>Dates:</strong> ${data.dateArrival} - ${data.dateDeparture}</p>
+                <p class="card-text"><strong>Adults:</strong> ${data.adults}</p>
+                <p class="card-text"><strong>Children:</strong> ${data.children}</p>
+                <p class="card-text"><strong>Price:</strong> $${data.price}</p>
+                <!-- Add more details as needed -->
+            </div>
+        </div>
+                    `;
+            return card;
+        }
+        fetchTours({});
     </script>
 </body>
 
