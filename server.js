@@ -222,12 +222,15 @@ app.post('/api/addToCart', (req, res) => {
             cartData = [];
         }
 
-        if (!Array.isArray(cartData)) {
+        if (!Array.isArray(cartData.tours)) {
             console.error('Existing cart data is not an array:', cartData);
             cartData = [];
         }
-
-        cartData.push(toursData);
+		const tour = cartData.tours.find(tour => tour.id == toursData.id);
+		if(tour){
+			return res.status(400).json({ success: false, message: 'Tour already exists in cart' });
+		}
+        cartData.tours.push(toursData);
 
         fs.writeFile('toursCart.json', JSON.stringify(cartData, null, 2), (writeErr) => {
             if (writeErr) {
@@ -255,12 +258,12 @@ app.get('/api/cart', (req, res) => {
 			parsedCartData = [];
 		}
 
-		if (!Array.isArray(parsedCartData)) {
+		if (!Array.isArray(parsedCartData.tours)) {
 			console.error('Parsed cart data is not an array:', parsedCartData);
 			parsedCartData = [];
 		}
 
-		res.json({ success: true, tours: parsedCartData });
+		res.json(parsedCartData);
 	});
 
 });

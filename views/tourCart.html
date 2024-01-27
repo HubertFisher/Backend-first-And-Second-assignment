@@ -47,7 +47,7 @@
 
     
     <!--Users Cart -->
-    <div class="container" id="toursCart">
+    <div id="toursCart">
 
     </div>
 
@@ -62,30 +62,40 @@
 <script src="https://kit.fontawesome.com/3b83a3096d.js" crossorigin="anonymous"></script>
 <script>
      document.addEventListener('DOMContentLoaded', function () {
-       async function getTurs(){
-            const tours = await fetch('/api/tours').json();
+       async function getTurs() {
+        try {
+            const response = await fetch('/api/cart');
+            console.log(response.tours);
+            
+            const tours = await response.json();
             displayTours(tours);
-        } 
-        function displayTours(data) {
+        } catch (error) {
+            console.error('Error fetching tours data:', error.message);
+            // Handle the error or log it accordingly
+        }
+  
+        async function displayTours(data) {
             const toursContainer = document.getElementById('toursCart');
             toursContainer.innerHTML = '';
-            if (Array.isArray(data )) {
-                data.forEach(tour => {
-                    const card = createTourCard(tour);
+
+            try {
+                for (const tour of data.tours) {
+                    const card = await createTourCard(tour);
                     toursContainer.appendChild(card);
-                });
-            } else {
-                console.error('Tours is not an array:', data.tours);
+                }
+            } catch (error) {
+                console.error('Tours is not an array:', data);
                 // Handle the error or log it accordingly
             }
         }
         async function createTourCard(data){
-            const weather = await fetch(`/api/waether`).json();
+            const response = await fetch(`http://localhost:3000/weather/api?city=${data.city}`);
+		    const weatherResponse = await response.json();
             const card = document.createElement('div');
             card.innerHTML = `
-            <div class="container p-2 m-5">
+            <div class="container p-2 m-1 mt-0">
             <div class="row">
-            <div class="card tour-card text-white m-5 p-4">
+            <div class="card tour-card text-white m-5 p-4 mt-0 mb-1">
                 <div class="row">
                     <div class="col-md-5">
                         <div class="card-body">
@@ -115,7 +125,7 @@
                                 </tbody>
                             </table>
                             <p class="card-text fs-4">Price: ${data.price}$</p>
-                            <button id="removeBtn" class="btn m-0" data-tourid="${data.id}">Add to Profile</button>
+                            <button id="removeBtn" class="btn m-0" data-tourid="${data.id}">remove</button>
                         </div>
                     </div>
                     <div class="col-md-4">
@@ -127,19 +137,19 @@
                           <tbody>
                             <tr>
                               <td><strong>Location:</strong></td>
-                              <td>{{weatherLocation}}</td>
+                              <td>${weatherResponse.location}</td>
                             </tr>
                             <tr>
                               <td><strong>Temperature:</strong></td>
-                              <td>{{weatherTemperature}}°C</td>
+                              <td>${weatherResponse.temperature}°C</td>
                             </tr>
                             <tr>
                               <td><strong>Feels Like:</strong></td>
-                              <td>{{weatherFeelsLike}}°C</td>
+                              <td>${weatherResponse.feelsLike}°C</td>
                             </tr>
                             <tr>
                               <td><strong>Wind Speed:</strong></td>
-                              <td>{{weatherWindSpeed}} kph</td>
+                              <td>${weatherResponse.windSpeed} kph</td>
                             </tr>
                           </tbody>
                         </table>
@@ -152,8 +162,10 @@
             return card;
 
         }
-     });
-
+        
+     }getTurs();
+    });
+  
 </script>
 </body>
 </html>
