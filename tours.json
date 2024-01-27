@@ -27,18 +27,6 @@
       {
         "id": "3",
         "country": "Kazakhstan",
-        "city": "Almaty",
-        "hotel": "Mountain Retreat",
-        "dateArrival": "2024-05-20",
-        "dateDeparture": "2024-05-30",
-        "adults": "1",
-        "children": "0",
-        "price": "250",
-        "img": "https://www.advantour.com/img/kazakhstan/images/almaty.jpg"
-      },
-      {
-        "id": "4",
-        "country": "Kazakhstan",
         "city": "Astana",
         "hotel": "City Center Hotel",
         "dateArrival": "2024-06-10",
@@ -49,7 +37,7 @@
         "img": "https://all.accor.com/magazine/imagerie/1-619b.jpg"
       },
       {
-        "id": "5",
+        "id": "4",
         "country": "Italy",
         "city": "Rome",
         "hotel": "Historic Villa",
@@ -61,7 +49,7 @@
         "img": "https://tourismmedia.italia.it/is/image/mitur/20220127150143-colosseo-roma-lazio-shutterstock-756032350-1?wid=1600&hei=900&fit=constrain,1&fmt=webp"
       },
       {
-        "id": "6",
+        "id": "5",
         "country": "Japan",
         "city": "Tokyo",
         "hotel": "Modern Skyscraper",
@@ -70,10 +58,10 @@
         "adults": "1",
         "children": "0",
         "price": "280",
-        "img": "https://static.independent.co.uk/s3fs-public/thumbnails/image/2018/04/10/13/tokyo-main.jpg"
+        "img": "https://facts.net/wp-content/uploads/2023/06/45-facts-about-tokyo-1688094762.jpeg"
       },
       {
-        "id": "7",
+        "id": "6",
         "country": "France",
         "city": "Paris",
         "hotel": "Eiffel Tower View",
@@ -85,7 +73,7 @@
         "img": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcTf738TQy7UlJhHisutGLXaib2V5t5HzfxZB43erYuRqfEokQsIPmTmp07NEy1A3jL2gcThjT8PEsxZrwKOc3rjuQjjcRrUdw5gPjTa4Q"
       },
       {
-        "id": "8",
+        "id": "7",
         "country": "United States",
         "city": "New York",
         "hotel": "Luxury Hotel",
@@ -96,52 +84,29 @@
         "price": "200",
         "img": "https://lh5.googleusercontent.com/p/AF1QipN8CEMCG4Qrk5HIkMWAAgGg4DZt2pL-E_324a1q=w675-h390-n-k-no"
       },
-       {
-        "id": "9",
-        "country": "Kazakhstan",
-        "city": "Almaty",
-        "hotel": "Mountain Retreat",
-        "dateArrival": "2024-05-20",
-        "dateDeparture": "2024-05-30",
-        "adults": "1",
-        "children": "0",
-        "price": "250",
-        "img": "https://encrypted-tbn0.gstatic.com/licensed-image?q=tbn:ANd9GcSswVYRZ3xB_3R2qeb_a-aqdIgbYmdTsYJ5R4wZzGcDhbpnzgaFMEpdq9jdvCBrFnvpuijMJ0dfeRUBQMd1uehX4-uD62aZAsD3nFnNOQ"
-      },{
-        "id": "10",
-        "country": "Kazakhstan",
-        "city": "Astana",
-        "hotel": "City Center Hotel",
-        "dateArrival": "2024-06-10",
-        "dateDeparture": "2024-06-20",
-        "adults": "2",
-        "children": "1",
-        "price": "350",
-        "img": "https://lh5.googleusercontent.com/p/AF1QipOGuFrsPU3o534BQjIp_O5OYREYAn50dYv2gszY=w675-h390-n-k-no"
-      },
       {
-        "id": "11",
+        "id": "8",
         "country": "Italy",
         "city": "Rome",
-        "hotel": "Historic Villa",
-        "dateArrival": "2024-07-01",
-        "dateDeparture": "2024-07-15",
+        "hotel": "Ceasars Villa",
+        "dateArrival": "2024-10-01",
+        "dateDeparture": "2024-10-15",
         "adults": "2",
-        "children": "0",
-        "price": "320",
+        "children": "1",
+        "price": "600",
         "img": "https://encrypted-tbn1.gstatic.com/licensed-image?q=tbn:ANd9GcSw0goBvk-uDjsZY7Fg7H70hrjD9odomYmSlLdcaMz8m9SqJlobsAlfgsUW3m2fO3rq4ueg9NZef0206h454eEsWiL-iRs-CF-G7uio1w"
       },
       {
-        "id": "12",
+        "id": "9",
         "country": "Japan",
         "city": "Tokyo",
         "hotel": "Modern Skyscraper",
         "dateArrival": "2024-08-10",
         "dateDeparture": "2024-08-20",
-        "adults": "1",
-        "children": "0",
-        "price": "280",
-        "img": "https://www.gotokyo.org/en/plan/tokyo-outline/images/main.jpg"
+        "adults": "2",
+        "children": "1",
+        "price": "475",
+        "img": "https://images.ctfassets.net/bth3mlrehms2/2cCxpmVnFuv9cwMkr2NsqO/0f41647ab438ea7efa23b0d260123a50/Japan_Tokio_Skyline_und_Mt._Fuji.jpg?w=3721&h=2093&fl=progressive&q=50&fm=jpg"
       }   
     ]
   }

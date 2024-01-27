@@ -1,7 +1,11 @@
 const express = require('express');
 const app = express();
+const path = require('path')
+const axios = require('axios')
 const fs = require('fs')
+
 app.use(express.static(__dirname + '/public'))
+app.use(express.static(__dirname + '/views'));
 
 app.get('/', (req, res) => {
   res.sendFile(__dirname + '/views/index.html');
@@ -110,6 +114,60 @@ function getToursFromFile() {
 		console.error('Error reading the file:', error.message)
 	}
 }
+app.get('/weather/api', async (req, res) => {
+  try {
+      // Replace 'YOUR_API_KEY' with your actual WeatherAPI API key
+      let apiKey = 'f0b917381c4240aaa45111118241701' //bd5e378503939ddaee76f12ad7a97608
+      let city = req.query.city // Get the city from the query parameters
+      let link = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`
+      // Make a request to the WeatherAPI
+      const response = await axios.get(link)
+
+      const weatherData = {
+          location: response.data.location.name,
+          temperature: response.data.current.temp_c,
+          condition: response.data.current.condition.text,
+      }
+      res.json(weatherData)
+      
+  } catch (error) {
+      // Handle errors
+      console.error('Error fetching weather data:', error.message)
+      res.status(500).json({ error: 'Internal Server Error' })
+  }
+})
+
+app.get('/tour/:id', (req, res) => {
+	const tourId = parseInt(req.params.id)
+	const toursData = getToursFromFile()
+
+	if (!toursData) {
+		return res.status(500).send('Internal Server Error')
+	}
+	const selectedTour = toursData.tours.find(tour => tour.id == tourId)
+	if (!selectedTour) {
+		return res.status(404).send('Tour not found')
+	}
+	const tourHtmlPath = path.join(__dirname, 'views', 'tour.html')
+	fs.readFile(tourHtmlPath, 'utf8', (err, fileContent) => {
+		if (err) {
+			console.error('Error reading the file:', err.message)
+			return res.status(500).send('Internal Server Error')
+		}
+		const updatedHtml = fileContent
+			.replace('{{img}}', selectedTour.img)
+			.replace('{{country}}', selectedTour.country)
+			.replace('{{city}}', selectedTour.city)
+			.replace('{{hotel}}', selectedTour.hotel)
+			.replace('{{dateArrival}}', selectedTour.dateArrival)
+			.replace('{{dateDeparture}}', selectedTour.dateDeparture)
+			.replace('{{adults}}', selectedTour.adults)
+			.replace('{{children}}', selectedTour.children)
+			.replace('{{price}}', selectedTour.price)
+			.replace('{{id}}', selectedTour.id)
+		res.send(updatedHtml)
+	})
+}) 
 const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
