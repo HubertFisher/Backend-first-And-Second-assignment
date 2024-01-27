@@ -3,6 +3,9 @@ const app = express();
 const path = require('path')
 const axios = require('axios')
 const fs = require('fs')
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }))
 
 app.use(express.static(__dirname + '/public'))
 app.use(express.static(__dirname + '/views'));
@@ -15,6 +18,9 @@ app.get('/:pageName', (req, res) => {
   const pageName = req.params.pageName;
 
   switch (pageName) {
+	case 'tourscart':
+		res.sendFile(__dirname + '/views/tourCart.html');
+		break;
       case 'travelagency':
           res.sendFile(__dirname + '/views/travelagency.html');
           break;
@@ -25,7 +31,6 @@ app.get('/:pageName', (req, res) => {
  
 
 app.get('/api/cities', async (req, res) => {
-  console.log('Request to /api/cities:', req.query);
   const country = req.query.country;
   const cities = await getCitiesForCountry(country);
   res.send(cities);
@@ -115,27 +120,29 @@ function getToursFromJson() {
 	}
 }
 
-async function fetchWeather(city) {
-	try {
-	  let apiKey = 'f0b917381c4240aaa45111118241701';
-	  let link = `https://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
-	  const response = await axios.get(link);
-  
-	  const weatherData = {
-		location: response.data.location.name,
-		temperature: response.data.current.temp_c,
-		feelsLike: response.data.current.feelslike_c,
-		windSpeed: response.data.current.wind_kph,
-	  };
-  
-	  return weatherData;
-	} catch (error) {
-	  console.error('Error fetching weather data:', error.message);
-	  throw new Error('Internal Server Error');
-	}
-  }
-  
-  
+app.get('/weather/api', async (req, res) => {
+    try {
+        let apiKey = 'f0b917381c4240aaa45111118241701';
+        let city = req.query.city;
+        let link = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${city}`;
+        const response = await axios.get(
+			link
+		);
+
+        const weatherData = {
+            location: response.data.location.name,
+            temperature: response.data.current.temp_c,
+            feelsLike: response.data.current.feelslike_c,
+            windSpeed: response.data.current.wind_kph,
+        };
+
+        // Send the weather data as JSON response to the client
+        res.json(weatherData);
+    } catch (error) {
+        console.error('Error fetching weather:', error.message);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
 app.get('/tour/:id', async (req, res) => {
 	try {
 	  const tourId = parseInt(req.params.id);
@@ -154,16 +161,15 @@ app.get('/tour/:id', async (req, res) => {
 	  let weatherData = {};
   
 	  try {
-		const weatherResponse = await fetchWeather(chosenTour.city);
-  
+
+		const response = await fetch(`http://localhost:3000/weather/api?city=${chosenTour.city}`);
+		const weatherResponse = await response.json();
 		weatherData = {
 		  location: weatherResponse.location,
 		  temperature: weatherResponse.temperature,
 		  feelsLike : weatherResponse.feelsLike,
 		  windSpeed: weatherResponse.windSpeed,
 		};
-  
-		console.log('Weather API response:', weatherData);
 	  } catch (error) {
 		console.error('Error fetching weather data:', error.message);
 	  }
@@ -199,10 +205,68 @@ app.get('/tour/:id', async (req, res) => {
   }
   
   
+app.post('/api/addToCart', (req, res) => {
+    const toursData = req.body;
+
+    fs.readFile('toursCart.json', 'utf-8', (err, existingCartData) => {
+        if (err) {
+            console.error('Error reading existing cart data:', err);
+            return res.status(500).json({ success: false, message: 'Internal Server Error' });
+        }
+
+        let cartData;
+        try {
+            cartData = JSON.parse(existingCartData);
+        } catch (parseError) {
+            console.error('Error parsing existing cart data:', parseError);
+            cartData = [];
+        }
+
+        if (!Array.isArray(cartData)) {
+            console.error('Existing cart data is not an array:', cartData);
+            cartData = [];
+        }
+
+        cartData.push(toursData);
+
+        fs.writeFile('toursCart.json', JSON.stringify(cartData, null, 2), (writeErr) => {
+            if (writeErr) {
+                console.error('Error writing to toursCart.json:', writeErr);
+                return res.status(500).json({ success: false, message: 'Internal Server Error' });
+            }
+
+            res.json({ success: true, message: 'Tour added to cart successfully.' });
+        });
+    });
+});
+
+app.get('/api/cart', (req, res) => {
+	fs.readFile('toursCart.json', 'utf-8', (err, cartData) => {
+		if (err) {
+			console.error('Error reading cart data:', err);
+			return res.status(500).json({ success: false, message: 'Internal Server Error' });
+		}
+
+		let parsedCartData;
+		try {
+			parsedCartData = JSON.parse(cartData);
+		} catch (parseError) {
+			console.error('Error parsing cart data:', parseError);
+			parsedCartData = [];
+		}
+
+		if (!Array.isArray(parsedCartData)) {
+			console.error('Parsed cart data is not an array:', parsedCartData);
+			parsedCartData = [];
+		}
+
+		res.json({ success: true, tours: parsedCartData });
+	});
+
+});
 
 
-
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 3000;
 app.listen(port, () => {
   console.log(`Server is running on port ${port}`);
 });

@@ -1,0 +1,26 @@
+[
+  {
+    "id": "4",
+    "country": "Italy",
+    "city": "Rome",
+    "hotel": "Historic Villa",
+    "dateArrival": "2024-07-01",
+    "dateDeparture": "2024-07-15",
+    "adults": "2",
+    "children": "0",
+    "price": "320",
+    "img": "https://tourismmedia.italia.it/is/image/mitur/20220127150143-colosseo-roma-lazio-shutterstock-756032350-1?wid=1600&hei=900&fit=constrain,1&fmt=webp"
+  },
+  {
+    "id": "1",
+    "country": "Australia",
+    "city": "Sydney",
+    "hotel": "Beach Resort",
+    "dateArrival": "2024-03-01",
+    "dateDeparture": "2024-03-10",
+    "adults": "2",
+    "children": "0",
+    "price": "300",
+    "img": "https://a.cdn-hotels.com/gdcs/production5/d1996/54fdb73f-eee5-4612-a3e7-6fc7ed2f7bee.jpg"
+  }
+]
